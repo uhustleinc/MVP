@@ -1,5 +1,5 @@
 //create a hidden field for role and extra fields needed
-add_action('register_form','add_hidden_role_field');
+add_action('woocommerce_register_form','add_hidden_role_field');
 
 function add_hidden_role_field(){
     if (isset($_GET['role'])){
