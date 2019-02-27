@@ -1,0 +1,19 @@
+add_action('woocommerce_register_post','is_valid_registration_email_domain', 10, 3 );
+function is_valid_registration_email_domain( $username, $email, $validation_errors ){
+    $valid_email_domains = array( 'georgetown.edu' ); // Allowed domains
+    $valid = false; // sets default validation to false
+    foreach( $valid_email_domains as $d ){
+        $d_length = strlen( $d );
+        $current_email_domain = strtolower( substr( $email, -($d_length), $d_length));
+        if( $current_email_domain == strtolower($d) ){
+            $valid = true;
+            break;
+        }
+    }
+
+    // Return error message for invalid domains
+    if( ! $valid ){
+        $error_text = __( "<strong>ERROR</strong>: Registration is only allowed for students and Georgetown University. If you think you are seeing this in error, please contact the system administrator at info@theuhustle.com.", "UHustle" );
+        $validation_errors->add( 'domain_whitelist_error', $error_text );
+    }
+}
