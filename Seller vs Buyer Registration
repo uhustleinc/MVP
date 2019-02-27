@@ -9,12 +9,12 @@ function add_hidden_role_field(){
     if (isset($user_type) && $user_type == "seller"){
         //add extra seller fields here eg:
         ?>
-        business name:
+        Business Name:
         <input id="user_email" type="text" tabindex="20" size="25" value="" name="business_name"/>
+        
+        Business Description:
+        <input id="user_email" type="text" tabindex="20" size="25" value="" name="business_description"/>
 
-        business address:
-        <input id="user_email" type="text" tabindex="20" size="25" value="" name="business_address"/>
-        <?php
     }
     if (isset($user_type) && $user_type == "buyer"){
         //add extra buyer fields here eg:
@@ -39,13 +39,13 @@ function my_user_fields_validation($login, $email, $errors) {
             $errors->add('empty_business_name', "<strong>ERROR</strong>: Please Enter in a Business name");
         }
         if ($_POST['business_address'] == '') {
-            $errors->add('empty_business_address', "<strong>ERROR</strong>: Please Enter in Business address");
+            $errors->add('empty_business_description', "<strong>ERROR</strong>: Please Enter in Business Description");
         } 
     }
     if (isset($user_type) && $user_type == "buyer"){
         //check buyers fields
         if ($_POST['buyer_name'] == '') {
-            $errors->add('empty_buyer_name', "<strong>ERROR</strong>: Please Enter in a Buyer name");
+            $errors->add('empty_buyer_name', "<strong>ERROR</strong>: Please Enter your name");
         }
     }
 }
@@ -65,7 +65,7 @@ function update_role($user_id, $password="", $meta=array()) {
         if (isset($user_type) && $user_type == "seller"){
             //save sellers fields
             update_user_meta($user_id, 'business_name', $_POST['business_name']);
-            update_user_meta($user_id, 'business_address', $_POST['business_address']);
+            update_user_meta($user_id, 'business_description', $_POST['business_description']);
         }
         if (isset($user_type) && $user_type == "buyer"){
             //save sellers fields
