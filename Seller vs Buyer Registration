@@ -38,7 +38,7 @@ function my_user_fields_validation($login, $email, $errors) {
         if ($_POST['business_name'] == '') {
             $errors->add('empty_business_name', "<strong>ERROR</strong>: Please Enter in a Business name");
         }
-        if ($_POST['business_address'] == '') {
+        if ($_POST['business_description'] == '') {
             $errors->add('empty_business_description', "<strong>ERROR</strong>: Please Enter in Business Description");
         } 
     }
