@@ -1,0 +1,75 @@
+//create a hidden field for role and extra fields needed
+add_action('register_form','add_hidden_role_field');
+
+function add_hidden_role_field(){
+    if (isset($_GET['role'])){
+        $user_type = $_GET['role'];
+        echo '<input id="user_email" type="hidden" tabindex="20" size="25" value="'.$_GET['role'].'" name="role"/>';
+    }
+    if (isset($user_type) && $user_type == "seller"){
+        //add extra seller fields here eg:
+        ?>
+        business name:
+        <input id="user_email" type="text" tabindex="20" size="25" value="" name="business_name"/>
+
+        business address:
+        <input id="user_email" type="text" tabindex="20" size="25" value="" name="business_address"/>
+        <?php
+    }
+    if (isset($user_type) && $user_type == "buyer"){
+        //add extra buyer fields here eg:
+        ?>
+        buyer name:
+        <input id="user_email" type="text" tabindex="20" size="25" value="" name="buyer_name"/>
+        <?php
+    }
+}
+add_action('register_post','my_user_fields_validation',10,3);
+
+function my_user_fields_validation($login, $email, $errors) {
+    global $firstname, $lastname;
+    //get the role to check
+    if (isset($_POST['role'])){
+        $user_type = $_POST['role'];
+    }
+    //check the fields according to the role
+    if (isset($user_type) && $user_type == "seller"){
+    //check sellers fields
+        if ($_POST['business_name'] == '') {
+            $errors->add('empty_business_name', "<strong>ERROR</strong>: Please Enter in a Business name");
+        }
+        if ($_POST['business_address'] == '') {
+            $errors->add('empty_business_address', "<strong>ERROR</strong>: Please Enter in Business address");
+        } 
+    }
+    if (isset($user_type) && $user_type == "buyer"){
+        //check buyers fields
+        if ($_POST['buyer_name'] == '') {
+            $errors->add('empty_buyer_name', "<strong>ERROR</strong>: Please Enter in a Buyer name");
+        }
+    }
+}
+add_action('user_register', 'update_role');
+
+//save the role
+function update_role($user_id, $password="", $meta=array()) {
+   if (isset($_POST['role'])){
+       $userdata = array();
+       $userdata['ID'] = $user_id;
+       $userdata['role'] = $_POST['role'];
+        $user_type = $_POST['role'];
+       //only allow if user role is my_role to avoid a few new admins to the site
+        if (($userdata['role'] == "seller") or ($userdata['role'] == "buyer")){
+            wp_update_user($userdata);
+        }
+        if (isset($user_type) && $user_type == "seller"){
+            //save sellers fields
+            update_user_meta($user_id, 'business_name', $_POST['business_name']);
+            update_user_meta($user_id, 'business_address', $_POST['business_address']);
+        }
+        if (isset($user_type) && $user_type == "buyer"){
+            //save sellers fields
+            update_user_meta($user_id, 'buyer_name', $_POST['buyer_name']);
+        }
+   }
+}
